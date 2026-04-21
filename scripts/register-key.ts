@@ -9,8 +9,11 @@ import {
   registerAccount,
   registerOrderlyKey,
 } from "../src/key-manager.js";
+import { printNetworkBanner } from "../src/banner.js";
 
 async function main() {
+  printNetworkBanner();
+
   const envPath = path.resolve(process.cwd(), ".env");
 
   const wallet = new Wallet(config.walletPrivateKey());

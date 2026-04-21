@@ -1,6 +1,60 @@
 import "dotenv/config";
 
+type Network = "testnet" | "mainnet";
+
+const network = (process.env.NETWORK ?? "testnet") as Network;
+
+if (network !== "testnet" && network !== "mainnet") {
+  throw new Error(`Invalid NETWORK: ${network}. Must be "testnet" or "mainnet"`);
+}
+
+// ========== Network-specific constants ==========
+
+interface NetworkConfig {
+  baseUrl: string;
+  operatorUrl: string;
+  rpcUrl: string;
+  chainId: number;
+  verifyingContract: string;
+  usdcAddress: string;
+  vaultAddress: string;
+  explorerUrl: string;
+}
+
+const TESTNET: NetworkConfig = {
+  baseUrl: "https://testnet-api.orderly.org",
+  operatorUrl: "https://testnet-operator-evm.orderly.org",
+  rpcUrl: "https://arbitrum-sepolia.publicnode.com",
+  chainId: 421614,
+  verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+  usdcAddress: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
+  vaultAddress: "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f",
+  explorerUrl: "https://sepolia.arbiscan.io",
+};
+
+const MAINNET: NetworkConfig = {
+  baseUrl: "https://api.orderly.org",
+  operatorUrl: "https://operator-evm.orderly.org",
+  rpcUrl: process.env.RPC_URL ?? "https://arb1.arbitrum.io/rpc",
+  chainId: 42161,
+  verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+  usdcAddress: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  vaultAddress: "0x816f722424b49Cf1275cc86DA9840Fbd5a6167e9",
+  explorerUrl: "https://arbiscan.io",
+};
+
+const NETWORKS: Record<Network, NetworkConfig> = {
+  testnet: TESTNET,
+  mainnet: MAINNET,
+};
+
+const current = NETWORKS[network];
+
 export const config = {
+  network,
+  isTestnet: network === "testnet",
+  isMainnet: network === "mainnet",
+
   walletPrivateKey: () => {
     const key = process.env.WALLET_PRIVATE_KEY;
     if (!key) throw new Error("WALLET_PRIVATE_KEY not set in .env");
@@ -19,41 +73,14 @@ export const config = {
     return id;
   },
 
-  network: process.env.NETWORK ?? "testnet",
-
-  get baseUrl() {
-    return this.network === "mainnet"
-      ? "https://api.orderly.org"
-      : "https://testnet-api.orderly.org";
-  },
-
-  get rpcUrl() {
-    return this.network === "mainnet"
-      ? "https://arb1.arbitrum.io/rpc"
-      : "https://arbitrum-sepolia.publicnode.com";
-  },
-
-  get chainId() {
-    return this.network === "mainnet" ? 42161 : 421614;
-  },
-
   brokerId: process.env.BROKER_ID ?? "woofi_pro",
 
-  get verifyingContract() {
-    return this.network === "mainnet"
-      ? "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
-      : "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC";
-  },
-
-  get usdcAddress() {
-    return this.network === "mainnet"
-      ? "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
-      : "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d";
-  },
-
-  get vaultAddress() {
-    return this.network === "mainnet"
-      ? "0x7924a8725D1A2E3e4bC1a23BD5B24034e6E3D016"
-      : "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f";
-  },
+  baseUrl: current.baseUrl,
+  operatorUrl: current.operatorUrl,
+  rpcUrl: current.rpcUrl,
+  chainId: current.chainId,
+  verifyingContract: current.verifyingContract,
+  usdcAddress: current.usdcAddress,
+  vaultAddress: current.vaultAddress,
+  explorerUrl: current.explorerUrl,
 } as const;

@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { placeOrder } from "../src/orders.js";
 import type { OrderType, OrderSide } from "../src/types.js";
+import { printNetworkBanner, confirmMainnet } from "../src/banner.js";
 
 function parseArgs(): {
   symbol: string;
@@ -42,6 +43,8 @@ function parseArgs(): {
 }
 
 async function main() {
+  printNetworkBanner();
+
   const { symbol, side, type, qty, price } = parseArgs();
 
   const order: Parameters<typeof placeOrder>[0] = {
@@ -54,6 +57,10 @@ async function main() {
   if (type === "LIMIT" && price) {
     order.order_price = price;
   }
+
+  await confirmMainnet(
+    `place ${type} ${side} order: ${qty} ${symbol}${price ? ` @ ${price}` : ""}`
+  );
 
   console.log(`Placing ${type} ${side} order: ${qty} ${symbol}${price ? ` @ ${price}` : ""}`);
   const result = await placeOrder(order);

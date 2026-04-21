@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { orderlyFetch } from "../src/client.js";
 import { placeOrder } from "../src/orders.js";
+import { printNetworkBanner, confirmMainnet } from "../src/banner.js";
 
 interface PositionsResponse {
   success: boolean;
@@ -16,6 +17,8 @@ interface PositionsResponse {
 }
 
 async function main() {
+  printNetworkBanner();
+
   const args = process.argv.slice(2);
   const get = (flag: string) => {
     const idx = args.indexOf(flag);
@@ -54,6 +57,10 @@ async function main() {
     );
     return;
   }
+
+  await confirmMainnet(
+    `close ${toClose.length} position(s): ${toClose.map((p) => p.symbol).join(", ")}`
+  );
 
   for (const pos of toClose) {
     const qty = Math.abs(Number(pos.position_qty));

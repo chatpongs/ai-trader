@@ -2,8 +2,11 @@ import "dotenv/config";
 import { JsonRpcProvider, Wallet, formatEther } from "ethers";
 import { config } from "../src/config.js";
 import { depositUsdc } from "../src/deposit.js";
+import { printNetworkBanner, confirmMainnet } from "../src/banner.js";
 
 async function main() {
+  printNetworkBanner();
+
   const args = process.argv.slice(2);
   const amountIdx = args.indexOf("--amount");
   const amount = amountIdx !== -1 ? parseFloat(args[amountIdx + 1]) : 10;
@@ -21,11 +24,18 @@ async function main() {
   console.log(`ETH balance: ${formatEther(ethBalance)} ETH`);
 
   if (ethBalance === 0n) {
-    console.error("\nNo ETH for gas! Get testnet ETH from:");
-    console.error("  https://faucet.quicknode.com/arbitrum/sepolia");
-    console.error("  https://www.alchemy.com/faucets/arbitrum-sepolia\n");
+    console.error("\nNo ETH for gas!");
+    if (config.isTestnet) {
+      console.error("Get testnet ETH from:");
+      console.error("  https://faucet.quicknode.com/arbitrum/sepolia");
+      console.error("  https://www.alchemy.com/faucets/arbitrum-sepolia\n");
+    } else {
+      console.error("Send ETH to your wallet on Arbitrum One.\n");
+    }
     process.exit(1);
   }
+
+  await confirmMainnet(`deposit ${amount} USDC to Orderly Vault`);
 
   console.log(`Depositing ${amount} USDC on ${config.network}...`);
   await depositUsdc(amount);

@@ -14,7 +14,13 @@ const VAULT_ABI = [
 ];
 
 export async function claimFaucetUsdc(address: string): Promise<void> {
-  const faucetUrl = "https://testnet-operator-evm.orderly.org/v1/faucet/usdc";
+  if (!config.isTestnet) {
+    throw new Error(
+      "Faucet is only available on testnet. On mainnet you need real USDC."
+    );
+  }
+
+  const faucetUrl = `${config.operatorUrl}/v1/faucet/usdc`;
 
   const response = await fetch(faucetUrl, {
     method: "POST",
