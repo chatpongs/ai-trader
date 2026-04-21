@@ -10,6 +10,7 @@
     "order": "tsx scripts/place-order.ts",
     "orders": "tsx scripts/list-orders.ts",
     "cancel": "tsx scripts/cancel-order.ts",
+    "close": "tsx scripts/close-position.ts",
     "position": "tsx scripts/get-position.ts",
     "balance": "tsx scripts/get-position.ts --balances",
     "typecheck": "tsc --noEmit"
