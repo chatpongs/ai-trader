@@ -1,0 +1,28 @@
+{
+  "name": "ai-trader",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "register-key": "tsx scripts/register-key.ts",
+    "faucet": "tsx scripts/faucet.ts",
+    "deposit": "tsx scripts/deposit.ts",
+    "order": "tsx scripts/place-order.ts",
+    "orders": "tsx scripts/list-orders.ts",
+    "cancel": "tsx scripts/cancel-order.ts",
+    "position": "tsx scripts/get-position.ts",
+    "balance": "tsx scripts/get-position.ts --balances",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@noble/ed25519": "^2.1.0",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.5",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}
