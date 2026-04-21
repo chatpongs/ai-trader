@@ -21,6 +21,15 @@ const ADD_ORDERLY_KEY_TYPES = {
   ],
 };
 
+const REGISTRATION_TYPES = {
+  Registration: [
+    { name: "brokerId", type: "string" },
+    { name: "chainId", type: "uint256" },
+    { name: "timestamp", type: "uint64" },
+    { name: "registrationNonce", type: "uint256" },
+  ],
+};
+
 export interface KeyPair {
   privateKey: string;
   publicKey: string;
@@ -45,6 +54,54 @@ export function deriveAccountId(walletAddress: string): string {
       [walletAddress, solidityPackedKeccak256(["string"], [config.brokerId])]
     )
   );
+}
+
+export async function getRegistrationNonce(): Promise<string> {
+  const res = await fetch(`${config.baseUrl}/v1/registration_nonce`);
+  const data = await res.json();
+
+  if (!data.success) {
+    throw new Error(`Failed to get registration nonce: ${JSON.stringify(data)}`);
+  }
+
+  return data.data.registration_nonce as string;
+}
+
+export async function registerAccount(): Promise<string> {
+  const wallet = new Wallet(config.walletPrivateKey());
+  const registrationNonce = await getRegistrationNonce();
+
+  const message = {
+    brokerId: config.brokerId,
+    chainId: config.chainId,
+    timestamp: Date.now(),
+    registrationNonce,
+  };
+
+  const signature = await wallet.signTypedData(
+    { ...EIP712_DOMAIN, chainId: config.chainId },
+    REGISTRATION_TYPES,
+    message
+  );
+
+  const response = await fetch(`${config.baseUrl}/v1/register_account`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message,
+      signature,
+      userAddress: wallet.address,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(`Failed to register account: ${JSON.stringify(data)}`);
+  }
+
+  console.log("Account registered successfully:", JSON.stringify(data, null, 2));
+  return data.data.account_id as string;
 }
 
 export async function registerOrderlyKey(keyPair: KeyPair): Promise<void> {
@@ -79,7 +136,7 @@ export async function registerOrderlyKey(keyPair: KeyPair): Promise<void> {
 
   const data = await response.json();
 
-  if (!response.ok) {
+  if (!response.ok || !data.success) {
     throw new Error(`Failed to register orderly key: ${JSON.stringify(data)}`);
   }
 

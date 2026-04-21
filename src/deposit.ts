@@ -9,8 +9,8 @@ const ERC20_ABI = [
 ];
 
 const VAULT_ABI = [
-  "function deposit((bytes accountId, bytes32 brokerHash, bytes32 tokenHash, uint128 tokenAmount) depositInput) payable",
-  "function getDepositFee(address account, (bytes accountId, bytes32 brokerHash, bytes32 tokenHash, uint128 tokenAmount) depositInput) view returns (uint256)",
+  "function deposit((bytes32 accountId, bytes32 brokerHash, bytes32 tokenHash, uint128 tokenAmount) depositInput) payable",
+  "function getDepositFee(address account, (bytes32 accountId, bytes32 brokerHash, bytes32 tokenHash, uint128 tokenAmount) depositInput) view returns (uint256)",
 ];
 
 export async function claimFaucetUsdc(address: string): Promise<void> {
@@ -56,7 +56,7 @@ export async function depositUsdc(amount: number): Promise<string> {
   }
 
   const depositInput = {
-    accountId: Buffer.from(accountId.slice(2), "hex"),
+    accountId,
     brokerHash,
     tokenHash,
     tokenAmount: depositAmount,
