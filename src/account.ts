@@ -17,7 +17,9 @@ interface AccountInfoResponse {
 
 interface HoldingsResponse {
   success: boolean;
-  data: Holding[];
+  data: {
+    holding: Holding[];
+  };
 }
 
 export async function getAccountInfo(): Promise<AccountInfoResponse> {
@@ -25,5 +27,5 @@ export async function getAccountInfo(): Promise<AccountInfoResponse> {
 }
 
 export async function getHoldings(): Promise<HoldingsResponse> {
-  return orderlyFetch<HoldingsResponse>("GET", "/v1/client/holdings");
+  return orderlyFetch<HoldingsResponse>("GET", "/v1/client/holding");
 }

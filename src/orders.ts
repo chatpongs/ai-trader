@@ -29,11 +29,20 @@ export async function placeOrder(order: OrderRequest): Promise<OrderResponse> {
   return orderlyFetch<OrderResponse>("POST", "/v1/order", order);
 }
 
-export async function getOrders(symbol?: string): Promise<OrdersResponse> {
-  const path = symbol
-    ? `/v1/orders?symbol=${symbol}`
-    : "/v1/orders";
+export async function getOrders(options?: {
+  symbol?: string;
+  status?: string;
+}): Promise<OrdersResponse> {
+  const params = new URLSearchParams();
+  if (options?.symbol) params.set("symbol", options.symbol);
+  if (options?.status) params.set("status", options.status);
+  const qs = params.toString();
+  const path = qs ? `/v1/orders?${qs}` : "/v1/orders";
   return orderlyFetch<OrdersResponse>("GET", path);
+}
+
+export async function getOrder(orderId: number): Promise<{ success: boolean; data: Order }> {
+  return orderlyFetch<{ success: boolean; data: Order }>("GET", `/v1/order/${orderId}`);
 }
 
 export async function cancelOrder(orderId: number): Promise<CancelResponse> {
