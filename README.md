@@ -108,6 +108,54 @@ npm run order -- --symbol PERP_ETH_USDC --side BUY --qty 0.01 --type MARKET
 npm run order -- --symbol PERP_ETH_USDC --side SELL --qty 0.01 --type LIMIT --price 3500
 ```
 
+### `npm run stop-entry`
+
+Places a **STOP** algo order that opens a new position when the mark price crosses a trigger. Useful for "buy the dip" setups: trigger fires when price trades at or through the stop price, then becomes a market (or limit) order.
+
+Flags:
+
+- `--symbol` — e.g. `PERP_ETH_USDC`
+- `--trigger` — mark price that activates the order
+- `--qty` — order quantity
+- `--side` — optional, defaults to `BUY` (`BUY` or `SELL`)
+- `--type` — optional, defaults to `MARKET` (`MARKET` or `LIMIT`)
+- `--price` — required only for `LIMIT` orders
+
+```bash
+# Buy 0.01 ETH if price drops to 1800 (market fill)
+npm run stop-entry -- --symbol PERP_ETH_USDC --trigger 1800 --qty 0.01
+
+# Buy 0.01 ETH if price drops to 1800, but only fill at 1799 or better (limit)
+npm run stop-entry -- --symbol PERP_ETH_USDC --trigger 1800 --qty 0.01 --type LIMIT --price 1799
+
+# Short-entry when price breaks down below 1800
+npm run stop-entry -- --symbol PERP_ETH_USDC --trigger 1800 --qty 0.01 --side SELL
+```
+
+### `npm run stop-loss`
+
+Places a **reduce-only STOP** algo order that closes (part of) an existing position when the mark price crosses a trigger. Side and quantity are auto-detected from your open position if omitted.
+
+Flags:
+
+- `--symbol` — e.g. `PERP_ETH_USDC`
+- `--trigger` — mark price that activates the close
+- `--qty` — optional, defaults to full current position size
+- `--side` — optional, auto-detected (opposite of your position)
+- `--type` — optional, defaults to `MARKET` (`MARKET` or `LIMIT`)
+- `--price` — required only for `LIMIT` orders
+
+```bash
+# Stop-loss at 1500 for whatever position you currently hold on ETH
+npm run stop-loss -- --symbol PERP_ETH_USDC --trigger 1500
+
+# Partial stop-loss: close only 0.005 ETH when price hits 1500
+npm run stop-loss -- --symbol PERP_ETH_USDC --trigger 1500 --qty 0.005
+
+# Stop-limit: trigger at 1500, close via limit at 1495
+npm run stop-loss -- --symbol PERP_ETH_USDC --trigger 1500 --type LIMIT --price 1495
+```
+
 ### `npm run orders`
 
 Lists open orders (or filters/fetches specific ones).

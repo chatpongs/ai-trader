@@ -2,6 +2,30 @@ export type OrderSide = "BUY" | "SELL";
 
 export type OrderType = "LIMIT" | "MARKET";
 
+export type AlgoType =
+  | "STOP"
+  | "TP_SL"
+  | "POSITIONAL_TP_SL"
+  | "BRACKET"
+  | "TRAILING_STOP"
+  | "TAKE_PROFIT"
+  | "STOP_LOSS";
+
+export type TriggerPriceType = "MARK_PRICE";
+
+export interface AlgoOrderRequest {
+  symbol: string;
+  algo_type: AlgoType;
+  type: OrderType;
+  side: OrderSide;
+  quantity: number;
+  trigger_price: number;
+  trigger_price_type?: TriggerPriceType;
+  price?: number;
+  reduce_only?: boolean;
+  client_order_id?: string;
+}
+
 export interface OrderRequest {
   symbol: string;
   order_type: OrderType;

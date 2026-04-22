@@ -1,5 +1,5 @@
 import { orderlyFetch } from "./client.js";
-import type { Order, OrderRequest } from "./types.js";
+import type { AlgoOrderRequest, Order, OrderRequest } from "./types.js";
 
 interface OrderResponse {
   success: boolean;
@@ -47,4 +47,22 @@ export async function getOrder(orderId: number): Promise<{ success: boolean; dat
 
 export async function cancelOrder(orderId: number): Promise<CancelResponse> {
   return orderlyFetch<CancelResponse>("DELETE", `/v1/order/${orderId}`);
+}
+
+interface AlgoOrderResponse {
+  success: boolean;
+  data: {
+    order_id: number;
+    client_order_id?: string;
+    algo_type: string;
+    quantity: number;
+  };
+}
+
+export async function placeAlgoOrder(order: AlgoOrderRequest): Promise<AlgoOrderResponse> {
+  return orderlyFetch<AlgoOrderResponse>("POST", "/v1/algo/order", order);
+}
+
+export async function cancelAlgoOrder(orderId: number): Promise<CancelResponse> {
+  return orderlyFetch<CancelResponse>("DELETE", `/v1/algo/order?order_id=${orderId}`);
 }

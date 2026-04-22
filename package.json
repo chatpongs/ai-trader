@@ -8,6 +8,8 @@
     "faucet": "tsx scripts/faucet.ts",
     "deposit": "tsx scripts/deposit.ts",
     "order": "tsx scripts/place-order.ts",
+    "stop-entry": "tsx scripts/stop-entry.ts",
+    "stop-loss": "tsx scripts/stop-loss.ts",
     "orders": "tsx scripts/list-orders.ts",
     "cancel": "tsx scripts/cancel-order.ts",
     "close": "tsx scripts/close-position.ts",
