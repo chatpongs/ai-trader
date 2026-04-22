@@ -45,8 +45,15 @@ export async function getOrder(orderId: number): Promise<{ success: boolean; dat
   return orderlyFetch<{ success: boolean; data: Order }>("GET", `/v1/order/${orderId}`);
 }
 
-export async function cancelOrder(orderId: number): Promise<CancelResponse> {
-  return orderlyFetch<CancelResponse>("DELETE", `/v1/order/${orderId}`);
+export async function cancelOrder(
+  orderId: number,
+  symbol: string
+): Promise<CancelResponse> {
+  const qs = new URLSearchParams({
+    order_id: String(orderId),
+    symbol,
+  }).toString();
+  return orderlyFetch<CancelResponse>("DELETE", `/v1/order?${qs}`);
 }
 
 interface AlgoOrderResponse {
@@ -63,6 +70,13 @@ export async function placeAlgoOrder(order: AlgoOrderRequest): Promise<AlgoOrder
   return orderlyFetch<AlgoOrderResponse>("POST", "/v1/algo/order", order);
 }
 
-export async function cancelAlgoOrder(orderId: number): Promise<CancelResponse> {
-  return orderlyFetch<CancelResponse>("DELETE", `/v1/algo/order?order_id=${orderId}`);
+export async function cancelAlgoOrder(
+  orderId: number,
+  symbol: string
+): Promise<CancelResponse> {
+  const qs = new URLSearchParams({
+    order_id: String(orderId),
+    symbol,
+  }).toString();
+  return orderlyFetch<CancelResponse>("DELETE", `/v1/algo/order?${qs}`);
 }

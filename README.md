@@ -176,10 +176,17 @@ npm run orders -- --id 3064266535
 
 ### `npm run cancel`
 
-Cancels an open order by its ID.
+Cancels an open order by its ID. Orderly requires a symbol to cancel; if you omit `--symbol`, the script looks it up automatically via `GET /v1/order/:id`. Pass `--algo` to cancel a stop / algo order.
 
 ```bash
+# Regular order (symbol auto-resolved)
 npm run cancel -- --id 3064266535
+
+# Regular order, explicit symbol (avoids an extra lookup)
+npm run cancel -- --id 3064266535 --symbol PERP_ETH_USDC
+
+# Algo order (STOP / stop-loss / stop-entry) — --symbol is required
+npm run cancel -- --id 3064266535 --symbol PERP_ETH_USDC --algo
 ```
 
 ### `npm run position`
