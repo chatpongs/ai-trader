@@ -44,7 +44,7 @@ const MAINNET: NetworkConfig = {
   verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
   ledgerContract: "0x6F7a338F2aA472838dEFD3283eB360d4Dff5D203",
   usdcAddress: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-  vaultAddress: "0x816f722424b49Cf1275cc86DA9840Fbd5a6167e9",
+  vaultAddress: "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9",
   explorerUrl: "https://arbiscan.io",
 };
 
