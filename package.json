@@ -7,6 +7,7 @@
     "register-key": "tsx scripts/register-key.ts",
     "faucet": "tsx scripts/faucet.ts",
     "deposit": "tsx scripts/deposit.ts",
+    "withdraw": "tsx scripts/withdraw.ts",
     "order": "tsx scripts/place-order.ts",
     "stop-entry": "tsx scripts/stop-entry.ts",
     "stop-loss": "tsx scripts/stop-loss.ts",

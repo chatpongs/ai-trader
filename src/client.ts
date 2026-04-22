@@ -57,5 +57,12 @@ export async function orderlyFetch<T>(
     );
   }
 
+  // Orderly often returns HTTP 200 with `success: false` and an error `code`/`message`
+  // for business-logic failures (e.g. invalid signature, bad nonce). Surface those
+  // as thrown errors so callers don't silently read `undefined` fields.
+  if (data && typeof data === "object" && (data as { success?: boolean }).success === false) {
+    throw new Error(`Orderly API error: ${JSON.stringify(data)}`);
+  }
+
   return data as T;
 }

@@ -81,6 +81,30 @@ npm run deposit
 npm run deposit -- --amount 50
 ```
 
+### `npm run withdraw`
+
+Withdraws USDC from your Orderly account back to your wallet. Uses the Orderly
+REST API: fetches a withdrawal nonce, signs an EIP-712 `Withdraw` message with
+your wallet key, and submits it to `POST /v1/withdraw_request`. The relayer
+settles the USDC on-chain (usually 1–2 minutes).
+
+**Arguments:**
+- `--amount` — required (USDC amount, e.g., `10`)
+- `--receiver` — optional, defaults to your own wallet address
+- `--token` — optional, defaults to `USDC`
+- `--cross-chain` — optional flag to allow cross-chain withdrawal (an extra fee is deducted from your account)
+
+```bash
+# Withdraw 10 USDC back to your own wallet
+npm run withdraw -- --amount 10
+
+# Withdraw to a different address
+npm run withdraw -- --amount 10 --receiver 0xabc...
+
+# Allow cross-chain withdrawal (if there's not enough liquidity on the current chain)
+npm run withdraw -- --amount 10 --cross-chain
+```
+
 ### `npm run balance`
 
 Shows account info (fees, leverage, etc.) and your current USDC holdings.
@@ -268,11 +292,13 @@ ai-trader/
 │   ├── account.ts        # GET account info & holdings
 │   ├── orders.ts         # Place/list/cancel/get orders
 │   ├── deposit.ts        # Faucet + on-chain USDC deposit
+│   ├── withdraw.ts       # EIP-712 signed withdrawal request
 │   └── types.ts          # TypeScript interfaces
 └── scripts/
     ├── faucet.ts
     ├── register-key.ts
     ├── deposit.ts
+    ├── withdraw.ts
     ├── place-order.ts
     ├── list-orders.ts
     ├── cancel-order.ts
