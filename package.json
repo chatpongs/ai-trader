@@ -15,6 +15,7 @@
     "close": "tsx scripts/close-position.ts",
     "position": "tsx scripts/get-position.ts",
     "balance": "tsx scripts/get-position.ts --balances",
+    "market": "tsx scripts/market.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

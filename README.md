@@ -189,6 +189,38 @@ npm run cancel -- --id 3064266535 --symbol PERP_ETH_USDC
 npm run cancel -- --id 3064266535 --symbol PERP_ETH_USDC --algo
 ```
 
+### `npm run market`
+
+Shows public market status: mark/index price, 24h high/low/change/volume, open interest, and funding rate. No authentication needed (uses Orderly's public endpoints).
+
+Flags:
+
+- `--symbol` — show detailed view of a single market
+- `--top N` — top N markets (default 10) sorted by `--sort`
+- `--all` — show all markets
+- `--sort volume|oi|change` — sort key when listing multiple (default `volume`)
+- `--raw` — print the raw JSON response
+
+```bash
+# Single symbol detail
+npm run market -- --symbol PERP_ETH_USDC
+
+# Top 10 markets by 24h USD volume (default)
+npm run market
+
+# Top 5 by open interest
+npm run market -- --top 5 --sort oi
+
+# Biggest 24h movers
+npm run market -- --top 10 --sort change
+
+# Every market
+npm run market -- --all
+
+# Raw JSON (for scripting)
+npm run market -- --symbol PERP_ETH_USDC --raw
+```
+
 ### `npm run position`
 
 Shows open positions.
