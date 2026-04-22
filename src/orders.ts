@@ -1,5 +1,5 @@
 import { orderlyFetch } from "./client.js";
-import type { AlgoOrderRequest, Order, OrderRequest } from "./types.js";
+import type { AlgoOrder, AlgoOrderRequest, Order, OrderRequest } from "./types.js";
 
 interface OrderResponse {
   success: boolean;
@@ -68,6 +68,30 @@ interface AlgoOrderResponse {
 
 export async function placeAlgoOrder(order: AlgoOrderRequest): Promise<AlgoOrderResponse> {
   return orderlyFetch<AlgoOrderResponse>("POST", "/v1/algo/order", order);
+}
+
+interface AlgoOrdersResponse {
+  success: boolean;
+  data: {
+    rows: AlgoOrder[];
+    meta: { total: number; page: number; per_page: number };
+  };
+}
+
+export async function getAlgoOrders(options?: {
+  symbol?: string;
+  status?: string;
+}): Promise<AlgoOrdersResponse> {
+  const params = new URLSearchParams();
+  if (options?.symbol) params.set("symbol", options.symbol);
+  if (options?.status) params.set("status", options.status);
+  const qs = params.toString();
+  const path = qs ? `/v1/algo/orders?${qs}` : "/v1/algo/orders";
+  return orderlyFetch<AlgoOrdersResponse>("GET", path);
+}
+
+export async function getAlgoOrder(orderId: number): Promise<{ success: boolean; data: AlgoOrder }> {
+  return orderlyFetch<{ success: boolean; data: AlgoOrder }>("GET", `/v1/algo/order/${orderId}`);
 }
 
 export async function cancelAlgoOrder(

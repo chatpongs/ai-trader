@@ -196,6 +196,12 @@ npm run orders -- --status FILLED
 
 # Look up a specific order by ID
 npm run orders -- --id 3064266535
+
+# Algo orders (stop / stop-loss / stop-entry)
+npm run orders -- --algo
+npm run orders -- --algo --symbol PERP_ETH_USDC
+npm run orders -- --algo --status NEW
+npm run orders -- --algo --id 3064266535
 ```
 
 ### `npm run cancel`

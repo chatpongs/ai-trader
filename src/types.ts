@@ -50,6 +50,21 @@ export interface Order {
   reduce_only: boolean;
 }
 
+export interface AlgoOrder {
+  order_id: number;
+  symbol: string;
+  algo_type: AlgoType;
+  side: OrderSide;
+  type: OrderType;
+  quantity: number;
+  trigger_price: number;
+  trigger_price_type: TriggerPriceType;
+  price?: number;
+  status: string;
+  reduce_only?: boolean;
+  created_at: number;
+}
+
 export interface Position {
   symbol: string;
   side: OrderSide;
